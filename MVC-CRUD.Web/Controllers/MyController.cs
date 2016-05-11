@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
+using MVC_CRUD.Web.Businness;
 using MVC_CRUD.Web.Data;
 using MVC_CRUD.Web.Repository;
 
@@ -13,6 +14,7 @@ namespace MVC_CRUD.Web.Controllers
     {
         #region Private member variables...
         private readonly IUserRepository _userRepository = new UserRepository();
+        private UnitOfWork _unitOfWork = new UnitOfWork();
         #endregion
 
 
@@ -21,8 +23,7 @@ namespace MVC_CRUD.Web.Controllers
         public ActionResult Index()
         {
 
-            var dbConnection = new MVCDBContext();
-            var userList = from user in _userRepository.GetUsers() select user;
+            var userList = from user in _unitOfWork.UseRepository.Get() select user;
             var users = new List<Models.User>();
 
             if (userList.Any())
@@ -39,7 +40,7 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My/Details/5
         public ActionResult Details(int id)
         {
-            var userDetails =  _userRepository.GetUserByID(id);
+            var userDetails = _unitOfWork.UseRepository.GetById(id);
             var user = new Models.User();
             if (userDetails != null)
             {
@@ -85,8 +86,8 @@ namespace MVC_CRUD.Web.Controllers
                     userData.PhoneNo = user.PhoneNo;
                 }
 
-                _userRepository.InsertUser(userData);
-                _userRepository.Save();
+                _unitOfWork.UseRepository.Insert(userData);
+                _unitOfWork.Save();
 
 
                 return RedirectToAction("Index");
@@ -100,7 +101,7 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My/Edit/5
         public ActionResult Edit(int id)
         {
-            var userDetails = _userRepository.GetUserByID(id);
+            var userDetails = _unitOfWork.UseRepository.GetById(id);
             var user = new Models.User();
             if (userDetails != null)
             {
@@ -124,7 +125,7 @@ namespace MVC_CRUD.Web.Controllers
         {
             try
             {
-                var user = _userRepository.GetUserByID(id);
+                var user = _unitOfWork.UseRepository.GetById(id);
                 if (user != null)
                 {
                     user.UserId = userDetails.UserId;
@@ -137,8 +138,8 @@ namespace MVC_CRUD.Web.Controllers
                     user.PhoneNo = userDetails.PhoneNo;
 
 
-                    _userRepository.UpdateUser(user);
-                    _userRepository.Save();
+                    _unitOfWork.UseRepository.Update(user);
+                    _unitOfWork.Save();
                 }
 
                 
@@ -154,7 +155,7 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My/Delete/5
         public ActionResult Delete(int id)
         {
-            var userDetails = _userRepository.GetUserByID(id);
+            var userDetails = _unitOfWork.UseRepository.GetById(id);
             var user = new Models.User();
             if (userDetails != null)
             {
@@ -178,11 +179,11 @@ namespace MVC_CRUD.Web.Controllers
         {
             try
             {
-                var userData = _userRepository.GetUserByID(id);
+                var userData = _unitOfWork.UseRepository.GetById(id);
                 if (userData != null)
                 {
-                    _userRepository.DeleteUser(id);
-                    _userRepository.Save();
+                    _unitOfWork.UseRepository.Delete(id);
+                    _unitOfWork.Save();
                 }
 
 

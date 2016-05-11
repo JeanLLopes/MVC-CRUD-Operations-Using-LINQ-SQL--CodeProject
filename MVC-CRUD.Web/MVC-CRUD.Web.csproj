@@ -136,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Businness\UnitOfWork.cs" />
     <Compile Include="Controllers\MyController.cs" />
     <Compile Include="Data\EFDataModel.Context.cs">
       <AutoGen>True</AutoGen>
@@ -152,6 +153,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EFDataModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Data\GenericRepository.cs" />
     <Compile Include="Data\MVCDBContext.cs" />
     <Compile Include="Data\User.cs">
       <DependentUpon>EFDataModel.tt</DependentUpon>
