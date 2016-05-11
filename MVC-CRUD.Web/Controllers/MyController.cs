@@ -14,7 +14,7 @@ namespace MVC_CRUD.Web.Controllers
         public ActionResult Index()
         {
 
-            var dbConnection = new MyDBDataContext();
+            var dbConnection = new MVCEntities();
             var userList = from user in dbConnection.Users select user;
             var users = new List<Models.User>();
 
@@ -32,7 +32,7 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My/Details/5
         public ActionResult Details(int? id)
         {
-            var dbContext = new MyDBDataContext();
+            var dbContext = new MVCEntities();
             var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
             var user = new Models.User();
             if (userDetails != null)
@@ -64,9 +64,9 @@ namespace MVC_CRUD.Web.Controllers
         {
             try
             {
-                var dbContext = new MyDBDataContext();
-                dbContext.Users.InsertOnSubmit(user);
-                dbContext.SubmitChanges();
+                var dbContext = new MVCEntities();
+                dbContext.Users.Add(user);
+                dbContext.SaveChanges();
 
 
                 return RedirectToAction("Index");
@@ -80,7 +80,7 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My/Edit/5
         public ActionResult Edit(int? id)
         {
-            var dbContext = new MyDBDataContext();
+            var dbContext = new MVCEntities();
             var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
             var user = new Models.User();
             if (userDetails != null)
@@ -105,7 +105,7 @@ namespace MVC_CRUD.Web.Controllers
         {
             try
             {
-                var dbContext = new MyDBDataContext();
+                var dbContext = new MVCEntities();
                 var user = dbContext.Users.FirstOrDefault(x => x.UserId == id);
                 if (user != null)
                 {
@@ -119,7 +119,7 @@ namespace MVC_CRUD.Web.Controllers
                     user.PhoneNo = userDetails.PhoneNo;
 
 
-                    dbContext.SubmitChanges();
+                    dbContext.SaveChanges();
                 }
 
                 
@@ -135,7 +135,7 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My/Delete/5
         public ActionResult Delete(int? id)
         {
-            var dbContext = new MyDBDataContext();
+            var dbContext = new MVCEntities();
             var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
             var user = new Models.User();
             if (userDetails != null)
@@ -161,12 +161,12 @@ namespace MVC_CRUD.Web.Controllers
         {
             try
             {
-                var dbContext = new MyDBDataContext();
+                var dbContext = new MVCEntities();
                 var userData = dbContext.Users.FirstOrDefault(x => x.UserId == id);
                 if (userData != null)
                 {
-                    dbContext.Users.DeleteOnSubmit(userData);
-                    dbContext.SubmitChanges(); 
+                    dbContext.Users.Remove(userData);
+                    dbContext.SaveChanges(); 
                 }
 
 
