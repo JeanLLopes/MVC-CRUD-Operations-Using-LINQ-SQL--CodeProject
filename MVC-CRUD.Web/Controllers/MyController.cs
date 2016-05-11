@@ -5,17 +5,24 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using MVC_CRUD.Web.Data;
+using MVC_CRUD.Web.Repository;
 
 namespace MVC_CRUD.Web.Controllers
 {
     public class MyController : Controller
     {
+        #region Private member variables...
+        private readonly IUserRepository _userRepository = new UserRepository();
+        #endregion
+
+
+
         // GET: My
         public ActionResult Index()
         {
 
             var dbConnection = new MVCDBContext();
-            var userList = from user in dbConnection.Users select user;
+            var userList = from user in _userRepository.GetUsers() select user;
             var users = new List<Models.User>();
 
             if (userList.Any())
@@ -30,10 +37,9 @@ namespace MVC_CRUD.Web.Controllers
         }
 
         // GET: My/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            var dbContext = new MVCDBContext();
-            var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+            var userDetails =  _userRepository.GetUserByID(id);
             var user = new Models.User();
             if (userDetails != null)
             {
@@ -64,9 +70,23 @@ namespace MVC_CRUD.Web.Controllers
         {
             try
             {
-                var dbContext = new MVCDBContext();
-                dbContext.Users.Add(user);
-                dbContext.SaveChanges();
+
+                var userData = new User();
+
+                if (user != null)
+                {
+                    userData.UserId = user.UserId;
+                    userData.Address = user.Address;
+                    userData.Company = user.Company;
+                    userData.Designation = user.Designation;
+                    userData.Email = user.Email;
+                    userData.FirstName = user.FirstName;
+                    userData.LastName = user.LastName;
+                    userData.PhoneNo = user.PhoneNo;
+                }
+
+                _userRepository.InsertUser(userData);
+                _userRepository.Save();
 
 
                 return RedirectToAction("Index");
@@ -78,10 +98,9 @@ namespace MVC_CRUD.Web.Controllers
         }
 
         // GET: My/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
-            var dbContext = new MVCDBContext();
-            var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+            var userDetails = _userRepository.GetUserByID(id);
             var user = new Models.User();
             if (userDetails != null)
             {
@@ -105,8 +124,7 @@ namespace MVC_CRUD.Web.Controllers
         {
             try
             {
-                var dbContext = new MVCDBContext();
-                var user = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+                var user = _userRepository.GetUserByID(id);
                 if (user != null)
                 {
                     user.UserId = userDetails.UserId;
@@ -119,7 +137,8 @@ namespace MVC_CRUD.Web.Controllers
                     user.PhoneNo = userDetails.PhoneNo;
 
 
-                    dbContext.SaveChanges();
+                    _userRepository.UpdateUser(user);
+                    _userRepository.Save();
                 }
 
                 
@@ -133,10 +152,9 @@ namespace MVC_CRUD.Web.Controllers
         }
 
         // GET: My/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int id)
         {
-            var dbContext = new MVCDBContext();
-            var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+            var userDetails = _userRepository.GetUserByID(id);
             var user = new Models.User();
             if (userDetails != null)
             {
@@ -150,23 +168,21 @@ namespace MVC_CRUD.Web.Controllers
                 user.PhoneNo = userDetails.PhoneNo;
             }
 
-
             return View(user);
 
         }
 
         // POST: My/Delete/5
         [HttpPost]
-        public ActionResult Delete(int? id, User user)
+        public ActionResult Delete(int id, User user)
         {
             try
             {
-                var dbContext = new MVCDBContext();
-                var userData = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+                var userData = _userRepository.GetUserByID(id);
                 if (userData != null)
                 {
-                    dbContext.Users.Remove(userData);
-                    dbContext.SaveChanges(); 
+                    _userRepository.DeleteUser(id);
+                    _userRepository.Save();
                 }
 
 
