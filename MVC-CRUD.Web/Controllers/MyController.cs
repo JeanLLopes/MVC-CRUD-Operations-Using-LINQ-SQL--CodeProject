@@ -30,30 +30,44 @@ namespace MVC_CRUD.Web.Controllers
         }
 
         // GET: My/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
+        {
+            var dbContext = new MyDBDataContext();
+            var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+            var user = new Models.User();
+            if (userDetails != null)
+            {
+                user.UserId = userDetails.UserId;
+                user.Address = userDetails.Address;
+                user.Company = userDetails.Company;
+                user.Designation = userDetails.Designation;
+                user.Email = userDetails.Email;
+                user.FirstName = userDetails.FirstName;
+                user.LastName = userDetails.LastName;
+                user.PhoneNo = userDetails.PhoneNo;
+
+            }
+
+
+            return View(user);
+        }
+
+        // GET: My/Create
+        public ActionResult Create()
         {
             return View();
         }
 
-        // GET: My/Create
-        public ActionResult Create(User user)
-        {
-
-            var dbContext = new MyDBDataContext();
-            dbContext.Users.InsertOnSubmit(user);
-            dbContext.SubmitChanges();
-
-
-            return RedirectToAction("Index");
-        }
-
         // POST: My/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(User user)
         {
             try
             {
-                // TODO: Add insert logic here
+                var dbContext = new MyDBDataContext();
+                dbContext.Users.InsertOnSubmit(user);
+                dbContext.SubmitChanges();
+
 
                 return RedirectToAction("Index");
             }
@@ -64,18 +78,51 @@ namespace MVC_CRUD.Web.Controllers
         }
 
         // GET: My/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            var dbContext = new MyDBDataContext();
+            var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+            var user = new Models.User();
+            if (userDetails != null)
+            {
+                user.UserId = userDetails.UserId;
+                user.Address = userDetails.Address;
+                user.Company = userDetails.Company;
+                user.Designation = userDetails.Designation;
+                user.Email = userDetails.Email;
+                user.FirstName = userDetails.FirstName;
+                user.LastName = userDetails.LastName;
+                user.PhoneNo = userDetails.PhoneNo;
+            }
+
+
+            return View(user);
         }
 
         // POST: My/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, User userDetails)
         {
             try
             {
-                // TODO: Add update logic here
+                var dbContext = new MyDBDataContext();
+                var user = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+                if (user != null)
+                {
+                    user.UserId = userDetails.UserId;
+                    user.Address = userDetails.Address;
+                    user.Company = userDetails.Company;
+                    user.Designation = userDetails.Designation;
+                    user.Email = userDetails.Email;
+                    user.FirstName = userDetails.FirstName;
+                    user.LastName = userDetails.LastName;
+                    user.PhoneNo = userDetails.PhoneNo;
+
+
+                    dbContext.SubmitChanges();
+                }
+
+                
 
                 return RedirectToAction("Index");
             }
@@ -86,24 +133,48 @@ namespace MVC_CRUD.Web.Controllers
         }
 
         // GET: My/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            var dbContext = new MyDBDataContext();
+            var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+            var user = new Models.User();
+            if (userDetails != null)
+            {
+                user.UserId = userDetails.UserId;
+                user.Address = userDetails.Address;
+                user.Company = userDetails.Company;
+                user.Designation = userDetails.Designation;
+                user.Email = userDetails.Email;
+                user.FirstName = userDetails.FirstName;
+                user.LastName = userDetails.LastName;
+                user.PhoneNo = userDetails.PhoneNo;
+            }
+
+
+            return View(user);
+
         }
 
         // POST: My/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int? id, User user)
         {
             try
             {
-                // TODO: Add delete logic here
+                var dbContext = new MyDBDataContext();
+                var userData = dbContext.Users.FirstOrDefault(x => x.UserId == id);
+                if (userData != null)
+                {
+                    dbContext.Users.DeleteOnSubmit(userData);
+                    dbContext.SubmitChanges(); 
+                }
+
 
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index");
             }
         }
     }
