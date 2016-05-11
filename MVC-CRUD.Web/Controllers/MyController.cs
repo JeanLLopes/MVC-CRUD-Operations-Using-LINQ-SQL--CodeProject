@@ -14,7 +14,7 @@ namespace MVC_CRUD.Web.Controllers
         public ActionResult Index()
         {
 
-            var dbConnection = new MVCEntities();
+            var dbConnection = new MVCDBContext();
             var userList = from user in dbConnection.Users select user;
             var users = new List<Models.User>();
 
@@ -32,7 +32,7 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My/Details/5
         public ActionResult Details(int? id)
         {
-            var dbContext = new MVCEntities();
+            var dbContext = new MVCDBContext();
             var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
             var user = new Models.User();
             if (userDetails != null)
@@ -60,11 +60,11 @@ namespace MVC_CRUD.Web.Controllers
 
         // POST: My/Create
         [HttpPost]
-        public ActionResult Create(User user)
+        public ActionResult Create(Models.User user)
         {
             try
             {
-                var dbContext = new MVCEntities();
+                var dbContext = new MVCDBContext();
                 dbContext.Users.Add(user);
                 dbContext.SaveChanges();
 
@@ -80,7 +80,7 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My/Edit/5
         public ActionResult Edit(int? id)
         {
-            var dbContext = new MVCEntities();
+            var dbContext = new MVCDBContext();
             var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
             var user = new Models.User();
             if (userDetails != null)
@@ -105,7 +105,7 @@ namespace MVC_CRUD.Web.Controllers
         {
             try
             {
-                var dbContext = new MVCEntities();
+                var dbContext = new MVCDBContext();
                 var user = dbContext.Users.FirstOrDefault(x => x.UserId == id);
                 if (user != null)
                 {
@@ -135,7 +135,7 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My/Delete/5
         public ActionResult Delete(int? id)
         {
-            var dbContext = new MVCEntities();
+            var dbContext = new MVCDBContext();
             var userDetails = dbContext.Users.FirstOrDefault(x => x.UserId == id);
             var user = new Models.User();
             if (userDetails != null)
@@ -161,7 +161,7 @@ namespace MVC_CRUD.Web.Controllers
         {
             try
             {
-                var dbContext = new MVCEntities();
+                var dbContext = new MVCDBContext();
                 var userData = dbContext.Users.FirstOrDefault(x => x.UserId == id);
                 if (userData != null)
                 {

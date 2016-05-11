@@ -152,6 +152,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EFDataModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Data\MVCDBContext.cs" />
     <Compile Include="Data\User.cs">
       <DependentUpon>EFDataModel.tt</DependentUpon>
     </Compile>
