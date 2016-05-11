@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
+using MVC_CRUD.Web.Data;
 
 namespace MVC_CRUD.Web.Controllers
 {
@@ -11,7 +13,20 @@ namespace MVC_CRUD.Web.Controllers
         // GET: My
         public ActionResult Index()
         {
-            return View();
+
+            var dbConnection = new MyDBDataContext();
+            var userList = from user in dbConnection.Users select user;
+            var users = new List<Models.User>();
+
+            if (userList.Any())
+            {
+                foreach (var user in userList)
+                {
+                    users.Add(new Models.User{UserId = user.UserId,Address = user.Address,Company = user.Company,Designation = user.Designation,Email = user.Email,FirstName = user.FirstName,LastName = user.LastName,PhoneNo = user.PhoneNo});
+                }
+            }
+
+            return View(users);
         }
 
         // GET: My/Details/5
@@ -21,9 +36,15 @@ namespace MVC_CRUD.Web.Controllers
         }
 
         // GET: My/Create
-        public ActionResult Create()
+        public ActionResult Create(User user)
         {
-            return View();
+
+            var dbContext = new MyDBDataContext();
+            dbContext.Users.InsertOnSubmit(user);
+            dbContext.SubmitChanges();
+
+
+            return RedirectToAction("Index");
         }
 
         // POST: My/Create
